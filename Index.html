@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primaria:#1E3A5F; --secundaria:#2F6690; --suave:#D9E2EC; --destaque:#F59E0B;
+  --fundo-cartao:#F4F6F8; --linha:#E6EAEE; --texto:#334155; --legenda:#64748B;
+  --alerta:#B45309; --apagado:#A0AEC0; --borda:rgba(30,58,95,.16);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#fff}
+body{font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--primaria);-webkit-font-smoothing:antialiased}
+a{color:var(--primaria)} a:hover{color:var(--secundaria)}
+
+/* Cabeçalho */
+header{background:#fff;border-bottom:3px solid var(--destaque)}
+.cab{max-width:1120px;margin:0 auto;padding:40px 48px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px}
+.cab-texto{display:flex;flex-direction:column;gap:12px}
+.olho{font-size:13px;letter-spacing:.16em;font-weight:700;color:var(--secundaria);text-transform:uppercase}
+.titulo{font-size:clamp(40px,7vw,72px);line-height:1;font-weight:900;color:var(--primaria);letter-spacing:-.02em}
+.seletor{position:relative;width:220px}
+.seletor select{width:100%;appearance:none;-webkit-appearance:none;font:inherit;font-size:15px;line-height:1.4;color:var(--primaria);background:#fff;padding:12px 40px 12px 14px;border-radius:12px;border:1px solid var(--borda);cursor:pointer;outline:none}
+.seletor select:focus{box-shadow:0 0 0 3px rgba(245,158,11,.55)}
+.seletor svg{position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none}
+
+/* Corpo */
+.corpo{max-width:1120px;margin:0 auto;padding:40px 48px 48px;display:flex;flex-direction:column;gap:40px}
+.abas{display:flex;gap:28px;border-bottom:1px solid var(--borda);overflow-x:auto;padding-top:6px}
+.abas button{all:unset;cursor:pointer;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--apagado);padding:0 0 12px;white-space:nowrap;transition:color .15s}
+.abas button:hover{color:var(--primaria)}
+.abas button[aria-selected="true"]{font-weight:900;color:var(--primaria);box-shadow:inset 0 -3px 0 var(--destaque)}
+.abas button:focus-visible{outline:3px solid rgba(245,158,11,.55);outline-offset:4px}
+.painel{display:flex;flex-direction:column;gap:44px}
+.intro{font-size:15px;line-height:1.6;color:var(--texto);max-width:720px;margin:0}
+
+/* Cartões sensíveis */
+.cartoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.cartao{display:flex;flex-direction:column;gap:12px;padding:28px;border-radius:20px;background:var(--fundo-cartao)}
+.cartao-topo{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.cartao-titulo{font-size:15px;font-weight:700}
+.selo{font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap}
+.cartao-valor{font-size:52px;font-weight:900;line-height:1}
+.cartao-frase{font-size:14px;line-height:1.5;color:var(--texto)}
+.barras{display:flex;justify-content:space-between;align-items:flex-end;height:56px;margin-top:8px}
+.barras div{width:14px;border-radius:999px}
+.barras-legenda{display:flex;justify-content:space-between;font-size:11px;color:var(--legenda)}
+
+/* Listas */
+.bloco{display:flex;flex-direction:column}
+.bloco-titulo{font-size:22px;font-weight:900}
+.bloco-titulo.menor{font-size:20px}
+.bloco-sub{font-size:13px;color:var(--legenda);margin:4px 0 16px}
+.bloco-cab{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.bloco-cab span:last-child{font-size:12px;color:var(--legenda)}
+.linha{display:grid;gap:16px;align-items:center;border-top:1px solid var(--linha)}
+.l-pessoa{grid-template-columns:minmax(0,1fr) auto;min-height:60px;padding:8px 0}
+.l-regra{grid-template-columns:minmax(0,1fr) 90px 190px;min-height:48px;font-size:14px}
+.l-app{grid-template-columns:minmax(0,220px) minmax(0,1fr) 200px;min-height:60px;padding:8px 0}
+.l-conta{grid-template-columns:minmax(0,1fr) 170px 100px;min-height:52px;font-size:13px;padding:6px 0}
+.l-inativa{grid-template-columns:minmax(0,1fr) 150px 100px;min-height:52px;font-size:13px;padding:6px 0}
+.l-mfa{grid-template-columns:minmax(0,1fr) 150px 140px;min-height:52px;font-size:13px;padding:6px 0}
+.col{display:flex;flex-direction:column;gap:3px;min-width:0}
+.nome{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:15px;font-weight:700;word-break:break-word}
+.frase{font-size:13px;color:var(--texto)}
+.miudo{font-size:11px;color:var(--legenda)}
+.total{font-size:20px;font-weight:900}
+.dir{text-align:right}
+.meio.dir{white-space:nowrap}
+.forte{font-weight:700}
+.ponto{width:10px;height:10px;border-radius:999px;flex:none}
+.ponto.p8{width:8px;height:8px}
+.rotulo-ponto{display:flex;gap:10px;align-items:center}
+.etiquetas{display:flex;flex-wrap:wrap;gap:14px;font-size:12px}
+.etiquetas span{display:flex;gap:6px;align-items:center}
+.primeira{font-size:11px;font-weight:700;padding:2px 10px;border-radius:999px;background:var(--destaque);color:var(--primaria)}
+.admin{font-size:10px;font-weight:700;color:var(--alerta);letter-spacing:.04em}
+.mais{font-size:12px;color:var(--legenda);padding-top:12px;border-top:1px solid var(--linha)}
+.vazio{font-size:14px;color:var(--legenda);padding:16px 0;border-top:1px solid var(--linha)}
+.rolagem{max-height:540px;overflow-y:auto;padding-right:10px;border-bottom:1px solid var(--linha);scrollbar-width:thin;scrollbar-color:var(--suave) transparent}
+.rolagem::-webkit-scrollbar{width:8px}
+.rolagem::-webkit-scrollbar-thumb{background:var(--suave);border-radius:999px}
+.rolagem::-webkit-scrollbar-thumb:hover{background:var(--secundaria)}
+.contagem{font-size:12px;color:var(--legenda)}
+.acoes{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.botao{all:unset;cursor:pointer;font:inherit;font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px;border:1px solid var(--borda);color:var(--primaria);background:#fff;white-space:nowrap}
+.botao:hover{border-color:var(--primaria)}
+.botao.aprovar{background:var(--primaria);border-color:var(--primaria);color:#fff}
+.botao.aprovar:hover{background:var(--secundaria);border-color:var(--secundaria)}
+.botao.reprovar{color:var(--alerta);border-color:rgba(180,83,9,.45)}
+.botao.reprovar:hover{border-color:var(--alerta)}
+.botao:focus-visible{outline:3px solid rgba(245,158,11,.55);outline-offset:2px}
+.botao[disabled]{opacity:.5;pointer-events:none}
+.l-app.reprovado{background:rgba(245,158,11,.10);border-left:3px solid var(--alerta);padding-left:12px}
+.selo-reprovado{font-size:11px;font-weight:700;color:var(--alerta);letter-spacing:.04em}
+
+/* Números de usuários e MFA */
+.numeros{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:32px}
+.numero{display:flex;flex-direction:column;gap:6px}
+.numero span:first-child{font-size:13px;font-weight:700}
+.numero span:last-child{font-size:40px;font-weight:900;line-height:1}
+.aviso{font-size:12px;color:var(--legenda);margin-top:-28px}
+.carregando{font-size:14px;color:var(--legenda);padding:24px 0}
+
+footer{max-width:1120px;margin:0 auto;padding:0 48px 48px}
+footer div{font-size:12px;color:var(--legenda);padding-top:20px;border-top:1px solid var(--linha)}
+footer a{font-weight:700}
+
+@media (max-width:720px){
+  .cab,.corpo,footer{padding-left:20px;padding-right:20px}
+  .cab{padding-top:24px;padding-bottom:28px}
+  .corpo{padding-top:28px}
+  .seletor{width:100%}
+  .cab-texto,.cab>div:last-child{width:100%}
+  .l-regra{grid-template-columns:minmax(0,1fr) 64px 120px}
+  .l-app{grid-template-columns:minmax(0,1fr) auto}
+  .l-app .col.meio{grid-column:1 / -1;grid-row:2}
+  .l-conta,.l-inativa,.l-mfa{grid-template-columns:minmax(0,1fr) 90px}
+  .l-conta .meio,.l-inativa .meio,.l-mfa .meio{display:none}
+  .cartao-valor{font-size:44px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="cab">
+    <div class="cab-texto">
+      <div class="olho" id="olho">Painel DLP</div>
+      <div class="titulo">Auditoria Google</div>
+    </div>
+    <div>
+      <div class="seletor">
+        <select id="semana" aria-label="Semana"></select>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E3A5F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="corpo">
+  <div class="abas" role="tablist" id="abas"></div>
+  <section id="conteudo"></section>
+</main>
+
+
+<script>
+var D = <?!= dadosJson ?>;
+var estado = { aba: 'dlp', semana: D.semanas.length - 1 };
+var usuarios = null, usuariosErro = null, usuariosCarregando = false;
+var COR = { destaque:'#F59E0B', suave:'#D9E2EC', alerta:'#B45309', legenda:'#64748B', primaria:'#1E3A5F' };
+var ARRISCADOS = ['E-mail', 'Drive', 'Admin'];
+
+function fmt(n){ return Number(n || 0).toLocaleString('pt-BR'); }
+function esc(t){ return String(t == null ? '' : t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function media(a){ return a.length ? a.reduce(function(x,y){return x+y;},0) / a.length : 0; }
+function curto(data){ return String(data).slice(0,5); }
+
+function plural(n, um, varios){ return fmt(n) + ' ' + (n === 1 ? um : varios); }
+// Lista completa dentro de uma caixa com barra de rolagem lateral.
+function lista(linhasHtml){ return '<div class="rolagem">' + linhasHtml + '</div>'; }
+function cabecalho(titulo, contagem, menor){
+  return '<div class="bloco-cab"><span class="bloco-titulo' + (menor ? ' menor' : '') + '">' + titulo + '</span><span class="contagem">' + contagem + '</span></div>';
+}
+
+function nomeSimples(regra){
+  var r = String(regra).toLowerCase();
+  if (r.indexOf('cpf') > -1) return 'CPF';
+  if (r.indexOf('cartão') > -1 || r.indexOf('cartao') > -1) return 'Cartão de crédito';
+  if (r.indexOf('e-mail') > -1 || r.indexOf('email') > -1) return 'Endereços de e-mail';
+  if (r.indexOf('telefone') > -1) return 'Números de telefone';
+  if (/\bip\b/.test(r)) return 'Endereços IP';
+  if (r.indexOf('gênero') > -1 || r.indexOf('genero') > -1) return 'Identidade de gênero';
+  return String(regra).replace(/^Regra DLP\s*-\s*/i, '');
+}
+function ehSensivel(regra){
+  var r = String(regra).toLowerCase();
+  return D.sensiveis.some(function(s){ return r.indexOf(s.palavra.toLowerCase()) > -1; });
+}
+
+/* ---------- Cabeçalho, seletor e abas ---------- */
+function montarSeletor(){
+  var sel = document.getElementById('semana');
+  if (!D.semanas.length){ sel.innerHTML = '<option>Sem dados</option>'; sel.disabled = true; return; }
+  var html = '';
+  for (var i = D.semanas.length - 1; i >= 0; i--){
+    var s = D.semanas[i];
+    html += '<option value="' + i + '">' + curto(s.inicio) + ' a ' + curto(s.fim) + (i === D.semanas.length - 1 ? ' (atual)' : '') + '</option>';
+  }
+  sel.innerHTML = html;
+  sel.value = String(estado.semana);
+  sel.onchange = function(){ estado.semana = Number(sel.value); render(); };
+}
+
+function montarAbas(){
+  var itens = [['dlp','Regras de DLP'],['apps','Apps de terceiros'],['users','Usuários'],['mfa','MFA']];
+  var el = document.getElementById('abas');
+  el.innerHTML = itens.map(function(it){
+    return '<button role="tab" type="button" data-aba="' + it[0] + '" aria-selected="' + (estado.aba === it[0]) + '">' + it[1] + '</button>';
+  }).join('');
+  Array.prototype.forEach.call(el.querySelectorAll('button'), function(b){
+    b.onclick = function(){ estado.aba = b.getAttribute('data-aba'); render(); };
+  });
+}
+
+function atualizarCabecalho(){
+  var s = D.semanas[estado.semana];
+  document.getElementById('olho').textContent = s ? 'Painel DLP | ' + curto(s.inicio) + ' a ' + s.fim : 'Painel DLP';
+  var porSemana = (estado.aba === 'dlp' || estado.aba === 'apps');
+  document.querySelector('.seletor').style.visibility = porSemana ? 'visible' : 'hidden';
+}
+
+/* ---------- Aba: Regras de DLP ---------- */
+function renderDlp(){
+  var W = estado.semana, s = D.semanas[W];
+  if (!s) return semDados();
+  var ant = W > 0 ? D.semanas[W-1] : null;
+  var h = '<div class="painel">';
+  h += '<p class="intro">O Google envia alertas sempre que identifica o compartilhamento de dados pessoais, como CPF ou número de cartão, por e-mail ou Drive. Abaixo, confira a quantidade de alertas registrados nesta semana e os colaboradores responsáveis pelos envios.</p>';
+
+  // Cartões
+  h += '<div class="cartoes">';
+  D.sensiveis.forEach(function(cfg){
+    var hist = D.semanas.slice(0, W+1).map(function(x){ return x.sens[cfg.palavra] || 0; });
+    var atual = hist[hist.length-1];
+    var anteriores = hist.slice(0, -1);
+    var m = media(anteriores);
+    var v = m ? Math.round((atual - m) / m * 100) : 0;
+    var alto = anteriores.length > 0 && m > 0 && v >= D.limite;
+    var frase = !anteriores.length ? 'Primeira semana do histórico. A comparação começa na próxima.'
+      : (m === 0 ? (atual ? 'Nenhum envio nas semanas anteriores.' : 'Nenhum envio registrado.')
+      : (v > 0 ? v + '% a mais do que costuma acontecer numa semana.' : 'Dentro do que costuma acontecer numa semana.'));
+    var mx = Math.max.apply(null, hist), mn = Math.min.apply(null, hist);
+    h += '<div class="cartao">';
+    h += '<div class="cartao-topo"><span class="cartao-titulo">' + esc(cfg.titulo) + '</span><span class="selo" style="background:' + (alto ? COR.destaque : COR.suave) + '">' + (alto ? 'Acima do normal' : 'Normal') + '</span></div>';
+    h += '<span class="cartao-valor">' + fmt(atual) + '</span>';
+    h += '<span class="cartao-frase">' + frase + '</span>';
+    h += '<div class="barras">' + hist.map(function(val, i){
+      var alt = Math.max(8, (val - mn) / ((mx - mn) || 1) * 48 + 8);
+      return '<div title="' + curto(D.semanas[i].inicio) + ': ' + fmt(val) + '" style="height:' + alt + 'px;background:' + (i === hist.length-1 ? COR.destaque : COR.suave) + '"></div>';
+    }).join('') + '</div>';
+    h += '<div class="barras-legenda"><span>' + curto(D.semanas[0].inicio) + '</span><span class="forte">esta semana</span></div>';
+    h += '</div>';
+  });
+  h += '</div>';
+
+  // Quem enviou
+  h += '<div class="bloco">' + cabecalho('Quem enviou ' + D.sensiveis.map(function(x){return x.rotulo;}).join(' ou '), plural(s.pessoas.length, 'remetente', 'remetentes'));
+  if (s.pessoas.length){
+    h += lista(s.pessoas.map(function(p){
+      var partes = D.sensiveis.filter(function(c){ return p.valores[c.palavra]; }).map(function(c, i){
+        return fmt(p.valores[c.palavra]) + (i === 0 ? ' envios com ' : ' com ') + c.rotulo;
+      });
+      return '<div class="linha l-pessoa"><div class="col"><span class="nome">' + esc(p.email) + (p.novo ? '<span class="primeira">primeira vez</span>' : '') + '</span><span class="frase">' + partes.join(' e ') + '</span></div><span class="total">' + fmt(p.total) + '</span></div>';
+    }).join(''));
+  } else {
+    h += '<div class="vazio">Nenhum envio de dado sensível nesta semana.</div>';
+  }
+  h += '</div>';
+
+  // Todos os tipos de dado
+  var regras = Object.keys(s.regras);
+  if (ant) Object.keys(ant.regras).forEach(function(r){ if (regras.indexOf(r) < 0) regras.push(r); });
+  regras.sort(function(a,b){ return (s.regras[b]||0) - (s.regras[a]||0); });
+  h += '<div class="bloco"><span class="bloco-titulo">Todos os tipos de dado</span><span class="bloco-sub">Avisos nesta semana, comparados com a semana passada</span>';
+  if (regras.length){
+    regras.forEach(function(r){
+      var a = s.regras[r] || 0, b = ant ? (ant.regras[r] || 0) : null;
+      var tend, cor = COR.legenda;
+      if (b === null) tend = 'primeira semana';
+      else if (b === 0) { tend = a ? 'novo nesta semana' : 'sem avisos'; if (a) cor = COR.alerta; }
+      else {
+        var v = (a - b) / b * 100;
+        tend = Math.abs(v) < 5 ? 'igual à semana passada' : (v > 0 ? 'subiu ' : 'caiu ') + Math.abs(Math.round(v)) + '%';
+        if (v >= 15) cor = COR.alerta;
+      }
+      h += '<div class="linha l-regra"><span class="rotulo-ponto"><span class="ponto" style="background:' + (ehSensivel(r) ? COR.destaque : COR.suave) + '"></span>' + esc(nomeSimples(r)) + '</span><span class="dir forte">' + fmt(a) + '</span><span class="dir forte" style="font-size:13px;color:' + cor + '">' + tend + '</span></div>';
+    });
+  } else {
+    h += '<div class="vazio">Nenhum aviso nesta semana.</div>';
+  }
+  h += '</div></div>';
+  return h;
+}
+
+/* ---------- Aba: Apps de terceiros ---------- */
+function temAcessoSensivel(a){ return a.sensiveis.some(function(t){ return ARRISCADOS.indexOf(t) > -1; }); }
+
+function linhaApp(a){
+  var tags = (a.sensiveis.length ? a.sensiveis : ['básico']).map(function(t){
+    return '<span><span class="ponto p8" style="background:' + (ARRISCADOS.indexOf(t) > -1 ? COR.destaque : COR.suave) + '"></span>' + esc(t) + '</span>';
+  }).join('');
+  var quem = '';
+  if (a.amostra){
+    var nomes = a.amostra.split(', ').map(function(e){ return e.split('@')[0] + '@'; });
+    quem = nomes.join(', ') + (a.usuarios > nomes.length ? ' e mais ' + (a.usuarios - nomes.length) : '');
+  }
+  var acao;
+  if (a.situacao === 'Novo'){
+    acao = '<div class="acoes"><button type="button" class="botao aprovar" data-app="' + esc(a.id) + '" data-decisao="Aprovado">Aprovar</button><button type="button" class="botao reprovar" data-app="' + esc(a.id) + '" data-decisao="Reprovado">Reprovar</button></div>';
+  } else if (a.situacao === 'Reprovado'){
+    acao = '<div class="acoes"><span class="selo-reprovado">REPROVADO · ATENÇÃO</span><button type="button" class="botao" data-app="' + esc(a.id) + '" data-decisao="Aprovado">Aprovar</button></div>';
+  } else {
+    acao = '<span class="dir" style="font-size:11px;font-weight:700;color:' + COR.legenda + '">conhecido</span>';
+  }
+  return '<div class="linha l-app' + (a.situacao === 'Reprovado' ? ' reprovado' : '') + '">' +
+    '<div class="col"><span style="font-size:14px;font-weight:700">' + esc(a.nome) + '</span><span class="miudo">' + plural(a.usuarios, 'usuário', 'usuários') + ' · ' + plural(a.autorizacoes, 'autorização', 'autorizações') + '</span></div>' +
+    '<div class="col meio" style="gap:6px"><div class="etiquetas">' + tags + '</div><span class="miudo">' + esc(quem) + '</span></div>' +
+    acao + '</div>';
+}
+
+function renderApps(){
+  var s = D.semanas[estado.semana];
+  if (!s) return semDados();
+  var reprovados = s.apps.filter(function(a){ return a.situacao === 'Reprovado'; });
+  var novos = s.apps.filter(function(a){ return a.situacao === 'Novo'; });
+  var conhecidos = s.apps.filter(function(a){ return a.situacao === 'Conhecido'; });
+  var aprovados = s.apps.filter(function(a){ return a.situacao === 'Aprovado'; });
+  var acompanhar = reprovados.concat(novos, conhecidos);
+  var sensiveis = acompanhar.filter(temAcessoSensivel);
+
+  var h = '<div class="painel">';
+
+  // Resumo dos achados
+  var achados = [];
+  if (reprovados.length) achados.push('<b>' + plural(reprovados.length, 'app reprovado', 'apps reprovados') + '</b> em uso, prioridade de atenção');
+  achados.push(novos.length ? '<b>' + plural(novos.length, 'app novo', 'apps novos') + '</b> para revisar' : 'nenhum app novo para revisar');
+  if (sensiveis.length) achados.push('<b>' + plural(sensiveis.length, 'app pede', 'apps pedem') + '</b> acesso a e-mail, Drive ou administração');
+  achados.push(plural(aprovados.length, 'app aprovado', 'apps aprovados') + ' em uso, sem necessidade de revisão');
+  h += '<p class="intro">Nesta semana: ' + achados.join('; ') + '. Use <b>Aprovar</b> para tirar um app da lista ou <b>Reprovar</b> para mantê-lo em destaque. A lista mostra apps que alguém conectou com a conta corporativa ou autorizou de novo na semana.</p>';
+
+  h += '<div class="bloco">' + cabecalho('Apps para acompanhar', plural(acompanhar.length, 'app', 'apps'));
+  h += '<span class="bloco-sub" style="margin-top:0">Reprovados primeiro, depois os novos para revisar e os já conhecidos</span>';
+  h += acompanhar.length ? lista(acompanhar.map(linhaApp).join('')) : '<div class="vazio">Nenhum app para acompanhar nesta semana.</div>';
+  h += '</div>';
+
+  if (aprovados.length){
+    h += '<div class="bloco">' + cabecalho('Apps aprovados', plural(aprovados.length, 'app', 'apps'), true);
+    h += '<span class="bloco-sub" style="margin-top:0">' + esc(D.aprovadosTexto) + ' e os aprovados por você · ' + plural(aprovados.reduce(function(x,a){ return x + a.autorizacoes; }, 0), 'autorização', 'autorizações') + ' na semana</span>';
+    h += lista(aprovados.map(function(a){
+      return '<div class="linha l-regra"><span class="rotulo-ponto"><span class="ponto" style="background:' + COR.suave + '"></span>' + esc(a.nome) + '</span><span class="dir forte" style="font-size:13px">' + plural(a.usuarios, 'usuário', 'usuários') + '</span><span class="dir" style="font-size:12px;color:' + COR.legenda + '">' + (a.manual ? 'aprovado por você' : 'ferramenta aprovada') + '</span></div>';
+    }).join(''));
+    h += '</div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+// Botões Aprovar / Reprovar: atualiza na hora e grava na planilha.
+document.addEventListener('click', function(ev){
+  var b = ev.target.closest('button[data-app]');
+  if (!b) return;
+  var id = b.getAttribute('data-app'), decisao = b.getAttribute('data-decisao');
+  var nome = '', anteriores = [];
+  D.semanas.forEach(function(sem){
+    sem.apps.forEach(function(a){
+      if (a.id === id){ nome = a.nome; anteriores.push([a, a.situacao, a.manual]); a.situacao = decisao; a.manual = true; }
+    });
+  });
+  render();
+  google.script.run
+    .withFailureHandler(function(e){
+      anteriores.forEach(function(x){ x[0].situacao = x[1]; x[0].manual = x[2]; });
+      render();
+      alert('Não foi possível salvar a decisão: ' + (e && e.message ? e.message : e));
+    })
+    .decidirApp(id, nome, decisao);
+});
+
+/* ---------- Abas: Usuários e MFA (situação atual) ---------- */
+var tentativasUsuarios = 0;
+function carregarUsuarios(){
+  if (usuarios || usuariosCarregando) return;
+  usuariosCarregando = true;
+  usuariosErro = null;
+  google.script.run
+    .withSuccessHandler(function(r){ usuarios = r; usuariosCarregando = false; tentativasUsuarios = 0; render(); })
+    .withFailureHandler(function(e){
+      usuariosCarregando = false;
+      tentativasUsuarios++;
+      if (tentativasUsuarios < 3){
+        setTimeout(function(){ carregarUsuarios(); }, 1500 * tentativasUsuarios); // tenta de novo sozinho
+      } else {
+        usuariosErro = e && e.message ? e.message : String(e);
+        render();
+      }
+    })
+    .obterUsuarios();
+}
+
+function tentarUsuariosDeNovo(){
+  tentativasUsuarios = 0; usuariosErro = null; render();
+}
+
+function aguardandoUsuarios(){
+  if (usuariosErro) return '<div class="carregando">Não foi possível ler as contas agora. Isso costuma ser uma instabilidade passageira do Google.<br><br><button type="button" class="botao aprovar" onclick="tentarUsuariosDeNovo()">Tentar de novo</button><br><br><span class="miudo">Detalhe: ' + esc(usuariosErro) + '</span></div>';
+  if (!usuarios){ carregarUsuarios(); return '<div class="carregando">Carregando contas…</div>'; }
+  return null;
+}
+
+function numeros(lista){
+  return '<div class="numeros">' + lista.map(function(n){
+    return '<div class="numero"><span>' + n[0] + '</span><span style="color:' + (n[2] || COR.primaria) + '">' + n[1] + '</span></div>';
+  }).join('') + '</div>';
+}
+
+function renderUsers(){
+  var espera = aguardandoUsuarios(); if (espera) return espera;
+  var u = usuarios;
+  var h = '<div class="painel">';
+  h += numeros([['Contas Google', fmt(u.total)], ['Ativas', fmt(u.ativas)], ['Suspensas', fmt(u.suspensas.length)], ['Sem login há + de ' + u.mesesSemLogin + ' meses', fmt(u.inativas.length), COR.alerta]]);
+  h += '<div class="aviso">Situação atual das contas, lida em ' + esc(u.lidoEm) + '. Não depende da semana selecionada.</div>';
+
+  h += '<div class="bloco">' + cabecalho('Contas suspensas', plural(u.suspensas.length, 'conta', 'contas'), true);
+  h += u.suspensas.length ? lista(u.suspensas.map(function(c){
+    return '<div class="linha l-conta"><div class="col"><span class="forte">' + esc(c.email) + '</span><span class="miudo">' + esc(c.unidade) + '</span></div><span class="dir meio" style="font-size:12px;color:' + COR.legenda + '">' + (c.desde ? 'desde ' + c.desde : 'data não registrada') + '</span><span class="dir forte">' + (c.duracao || '–') + '</span></div>';
+  }).join('')) : '<div class="vazio">Nenhuma conta suspensa.</div>';
+  h += '</div>';
+
+  h += '<div class="bloco">' + cabecalho('Sem login há mais de ' + u.mesesSemLogin + ' meses', plural(u.inativas.length, 'conta', 'contas'), true);
+  h += u.inativas.length ? lista(u.inativas.map(function(c){
+    return '<div class="linha l-inativa"><div class="col"><span class="forte">' + esc(c.email) + '</span><span class="miudo">' + esc(c.unidade) + '</span></div><span class="dir meio" style="font-size:12px;color:' + COR.legenda + '">último: ' + esc(c.ultimo) + '</span><span class="dir forte" style="color:' + (c.meses >= 6 ? COR.alerta : COR.primaria) + '">' + c.meses + ' meses</span></div>';
+  }).join('')) : '<div class="vazio">Nenhuma conta ativa sem login nesse período.</div>';
+  h += '</div></div>';
+  return h;
+}
+
+function renderMfa(){
+  var espera = aguardandoUsuarios(); if (espera) return espera;
+  var u = usuarios;
+  var admins = u.semMfa.filter(function(c){ return c.admin; }).length;
+  var pct = u.ativas ? Math.round(u.comMfa / u.ativas * 100) : 0;
+  var h = '<div class="painel">';
+  h += numeros([['Com MFA', fmt(u.comMfa) + ' <span style="font-size:16px;font-weight:700;color:' + COR.legenda + '">' + pct + '%</span>'], ['Sem MFA', fmt(u.semMfa.length), COR.alerta], ['Admins sem MFA', fmt(admins), COR.alerta]]);
+  h += '<div class="aviso">MFA é a verificação em duas etapas. Situação atual, lida em ' + esc(u.lidoEm) + '.</div>';
+  h += '<div class="bloco">' + cabecalho('Contas sem MFA', plural(u.semMfa.length, 'conta', 'contas'), true);
+  h += u.semMfa.length ? lista(u.semMfa.map(function(c){
+    return '<div class="linha l-mfa"><div class="col"><span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b>' + esc(c.email) + '</b>' + (c.admin ? '<span class="admin">ADMIN</span>' : '') + '</span><span class="miudo">' + esc(c.unidade) + '</span></div><span class="dir meio" style="font-size:12px;color:' + COR.legenda + '">último: ' + esc(c.ultimo) + '</span><span class="dir forte" style="font-size:12px;color:' + (c.situacao === 'não inscrito' ? COR.alerta : COR.legenda) + '">' + esc(c.situacao) + '</span></div>';
+  }).join('')) : '<div class="vazio">Todas as contas ativas usam MFA.</div>';
+  h += '</div></div>';
+  return h;
+}
+
+function semDados(){
+  return '<div class="vazio">Ainda não há semanas carregadas. No editor do Apps Script, execute a função <b>carregarHistorico</b>.</div>';
+}
+
+/* ---------- Render ---------- */
+function render(){
+  montarAbas();
+  atualizarCabecalho();
+  var alvo = document.getElementById('conteudo');
+  if (estado.aba === 'dlp') alvo.innerHTML = renderDlp();
+  else if (estado.aba === 'apps') alvo.innerHTML = renderApps();
+  else if (estado.aba === 'users') alvo.innerHTML = renderUsers();
+  else alvo.innerHTML = renderMfa();
+}
+
+montarSeletor();
+render();
+</script>
+</body>
+</html>
