@@ -1,0 +1,12 @@
+{
+  "timeZone": "America/Sao_Paulo",
+  "dependencies": {
+    "enabledAdvancedServices": [
+      { "userSymbol": "AdminReports", "serviceId": "admin", "version": "reports_v1" },
+      { "userSymbol": "AdminDirectory", "serviceId": "admin", "version": "directory_v1" }
+    ]
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "webapp": { "executeAs": "USER_DEPLOYING", "access": "MYSELF" }
+}
